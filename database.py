@@ -1,19 +1,21 @@
-# database.py
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./fizjo.db"  # lub np. postgres://...
+# Wczytaj zmienne środowiskowe z .env
+load_dotenv()
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}  # jeśli używasz SQLite
-)
+# Pobierz URL do bazy z .env
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Utwórz silnik
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
 
-# ✅ Dodaj to:
+# Funkcja do pobierania sesji DB
 def get_db():
     db = SessionLocal()
     try:
